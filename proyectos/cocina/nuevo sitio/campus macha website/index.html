@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Macha – Cursos Internacionales</title>
+  <!-- Google Analytics tag -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6Y6PQJ00KQ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-6Y6PQJ00KQ');
+  </script>
+  <!-- fin Google Analytics -->
+  <script id="paypal-sdk"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f6f5f3; margin: 0;}
+    header { background: #fff; padding: 18px 32px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px #0001; }
+    .logo { color: #ff7a00; font-size: 2em; font-weight: bold; }
+    nav { display: flex; gap: 24px; }
+    nav a { color: #222; text-decoration: none; font-weight: bold; font-size: 1.1em; padding: 2px 8px; border-radius: 5px;}
+    nav a:hover { background: #ffe3b0; color: #b66e18; }
+    .idioma { margin-left: 30px;}
+    .idioma button {background:#fff;border:1.5px solid #ff7a00;color:#ff7a00;font-weight:bold;font-size:1em;padding:3px 14px;border-radius:8px;margin-left:5px;cursor:pointer;}
+    .idioma button.active, .idioma button:hover {background:#ff7a00;color:#fff;}
+    .hero { background: url('img/hero.jpg') center/cover no-repeat; height: 320px; display: flex; align-items: center; justify-content: center;}
+    .herobox { background:rgba(255,255,255,0.94); padding: 36px 28px; border-radius: 16px; max-width: 600px; text-align:center; }
+    .herobox h1 { color: #ff7a00; font-size: 2.4em; margin-bottom: 16px;}
+    .herobox p { color: #4d3e1e; font-size: 1.2em; }
+    .promo { background: #ffe3b0; margin: 28px auto 0 auto; max-width: 700px; border-radius: 16px; padding: 28px 20px; text-align: center;}
+    .promo h2 { color: #ff7a00; font-size: 2em;}
+    .promo p { color: #6d4b19; font-size: 1.1em;}
+    .promo .paypal-box {margin-top:10px;}
+    .cursosbox { max-width: 1280px; margin: 32px auto 0 auto; padding:0 16px;}
+    .cursos-titulo { font-size: 2em; color: #ff7a00; font-weight: bold; text-align: center; margin-bottom: 24px;}
+    .cursos { display: flex; flex-wrap: wrap; gap: 24px; justify-content: center;}
+    .curso { background: #fff; border-radius: 12px; padding: 16px; width: 300px; box-shadow: 0 2px 8px #0002; margin-bottom: 14px;}
+    .curso img { width: 100%; border-radius: 8px; height: 170px; object-fit: cover; }
+    .curso h3 { margin: 12px 0 8px 0; color: #ff7a00; }
+    .curso p { color: #444; margin-bottom: 6px; }
+    .curso .precio { color: #199c23; font-weight: bold; font-size:1.1em; margin: 6px 0; }
+    .paypal {margin:10px 0;}
+    .cert-btn { background:#ff7a00; color:#fff; border:none; padding:9px 20px; border-radius:7px; margin-top:7px; cursor:pointer;}
+    .cert-btn:hover { background:#fa8f2b;}
+    .instructor-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px #0002; padding: 18px; text-align:center; width:220px;}
+    .instructor-card img { width: 80px; height:80px; border-radius: 50%; margin-bottom: 8px; object-fit:cover;}
+    .instructor-card .name { font-weight: bold; color: #ff7a00; margin-bottom: 2px; }
+    .instructor-card .desc { color: #333; font-size:0.97em; }
+    .muro, .reseñas, .instructores { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;}
+    
+.muro img {
+  width: 100%;
+  max-width: 190px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+
+@media (max-width: 820px) {
+  .cursos,
+  .instructores {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .muro,
+  .reseñas {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+    .reseña-card {background:#fff;border-radius:12px;box-shadow:0 2px 8px #0001;padding:14px;width:290px;}
+    .reseña-card .alumno {color:#ff7a00;font-weight:bold;}
+    .reseña-card .texto {color:#444;}
+    .contacto {background:#fff;border-radius:13px;padding:32px 20px;max-width:520px;margin:36px auto 32px auto;box-shadow:0 2px 8px #0001;}
+    .contacto h2 {color:#ff7a00;}
+    .contacto input, .contacto textarea {width:100%;margin:8px 0 15px 0;padding:10px 8px;border-radius:6px;border:1px solid #ffcd7a;font-size:1em;}
+    .contacto button {background:#ff7a00;color:#fff;padding:11px 30px;border:none;border-radius:8px;font-size:1.07em;cursor:pointer;}
+    .contacto button:hover {background:#fa8f2b;}
+    footer {background:#222;color:#fff;padding:20px 0 10px 0;text-align:center;}
+    h2.section {color:#ff7a00;text-align:center;margin-top:30px;}
+    @media (max-width:820px) {.cursos,.instructores,.muro,.reseñas{flex-direction:column;align-items:center;}}
+  
+    /* GRILLA RESPONSIVE con CSS Grid */
+    .cursos {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+      gap: 24px !important;
+    }
+    .instructores, .reseñas {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+      gap: 20px !important;
+    }
+    .muro {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)) !important;
+      gap: 20px !important;
+      justify-items: center !important;
+    }
+    /* Aseguramos que cada tarjeta ocupe su celda completa */
+    .curso, .instructor-card, .reseña-card {
+      width: 100% !important;
+      max-width: none !important;
+      box-sizing: border-box !important;
+    }
+
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Campus Macha</div>
+  <nav>
+    <a href="#hero" id="m-inicio">Inicio</a>
+    <a href="#cursos" id="m-cursos">Cursos</a>
+    <a href="#instructores" id="m-instructores">Instructores</a>
+    <a href="#promo" id="m-promo">Promo</a>
+    <a href="#reseñas" id="m-reseñas">Reseñas</a>
+    <a href="#muro" id="m-muro">Muro</a>
+    <a href="#contacto" id="m-contacto">Contacto</a>
+  </nav>
+  <div class="idioma">
+    <button onclick="setLang('es')" id="btnES" class="active">ES</button>
+    <button onclick="setLang('en')" id="btnEN">EN</button>
+  </div>
+</header>
+<a id="hero"></a>
+<div class="hero">
+  <div class="herobox">
+    <h1 id="tit-hero">Aprendé a cocinar como un chef internacional</h1>
+    <p id="txt-hero">35 cursos online, fotos reales, instructores de todo el mundo.<br>¡Sumate a la experiencia Campus Macha!</p>
+  </div>
+</div>
+<div class="promo" id="promo">
+  <h2 id="tit-promo">🔥 Promo especial 3x100 € 🔥</h2>
+  <p id="txt-promo">Llevate <b>3 cursos internacionales</b> a elección por solo 100 euros.</p>
+  <div class="paypal-box" id="paypal-promo"></div>
+</div>
+<a id="cursos"></a>
+<div class="cursosbox">
+  <div class="cursos-titulo" id="tit-cursos">Cursos Internacionales</div>
+  <div class="cursos" id="cursos-lista"></div>
+</div>
+<a id="instructores"></a>
+<h2 class="section" id="tit-instrus">Instructores</h2>
+<div class="instructores" id="instructores-lista"></div>
+<a id="muro"></a>
+<h2 class="section" id="tit-muro">Muro de fotos de la comunidad</h2>
+<div class="muro" id="muro"></div>
+<a id="reseñas"></a>
+<h2 class="section" id="tit-reseñas">Reseñas de alumnos</h2>
+<div class="reseñas" id="reseñas-lista"></div>
+<a id="contacto"></a>
+<div class="contacto">
+  <h2 id="tit-contacto">¿Querés contactarnos?</h2>
+  <form id="form-contacto" onsubmit="alert(txts[lang].gracias);return false;">
+    <input id="input-nombre" type="text" placeholder="Tu nombre" required>
+    <input id="input-email" type="email" placeholder="Tu email" required>
+    <textarea id="input-msg" rows="4" placeholder="Tu mensaje" required></textarea>
+    <button type="submit" id="btn-enviar">Enviar mensaje</button>
+  </form>
+  <div style="margin-top:18px;color:#9b7500;" id="correo-info">O escribinos a <b>campusmacha@gmail.com</b></div>
+</div>
+<footer>
+  <div id="foot-1">Campus Macha © 2025 | Cursos internacionales de cocina online</div>
+  <div style="color:#ffcd7a;margin-top:6px;font-size:.98em;" id="foot-2">Sitio desarrollado con amor, sabor y mucha paciencia 😅</div>
+</footer>
+<script>
+// TEXTOS MULTILINGÜES (UI y certificados)
+const txts = {
+  es: {
+    inicio: "Inicio", cursos: "Cursos", instructores: "Instructores", promo: "Promo", reseñas: "Reseñas", muro: "Muro", contacto: "Contacto",
+    titHero: "Aprendé a cocinar como un chef internacional",
+    txtHero: "35 cursos online, fotos reales, instructores de todo el mundo.<br>¡Sumate a la experiencia Campus Macha!",
+    titPromo: "🔥 Promo especial 3x100 € 🔥",
+    txtPromo: "Llevate <b>3 cursos internacionales</b> a elección por solo 100 euros.",
+    titCursos: "Cursos Internacionales",
+    titInstrus: "Instructores",
+    titContacto: "¿Querés contactarnos?",
+    btnEnviar: "Enviar mensaje",
+    phNombre: "Tu nombre",
+    phEmail: "Tu email",
+    phMsg: "Tu mensaje",
+    correoInfo: "O escribinos a <b>campusmacha@gmail.com</b>",
+    gracias: "Gracias por tu mensaje. Te responderemos pronto.",
+    certificado: "Descargar Certificado PDF",
+    certTit: "Certificado de Finalización",
+    certOtorg: "Otorgado a:",
+    certPor: "Por completar el curso:",
+    certCM: "Campus Macha",
+    certFelicit: "¡Felicitaciones!",
+    titReseñas: "Reseñas de alumnos",
+    titMuro: "Muro de fotos de la comunidad",
+    foot1: "Campus Macha © 2025 | Cursos internacionales de cocina online",
+    foot2: "Sitio desarrollado con amor, sabor y mucha paciencia 😅"
+  },
+  en: {
+    inicio: "Home", cursos: "Courses", instructores: "Instructors", promo: "Promo", reseñas: "Reviews", muro: "Wall", contacto: "Contact",
+    titHero: "Learn to cook like an international chef",
+    txtHero: "35 online courses, real photos, instructors from around the world.<br>Join the Campus Macha experience!",
+    titPromo: "🔥 3 for €100 Promo 🔥",
+    txtPromo: "Pick <b>any 3 international courses</b> for just 100 euros.",
+    titCursos: "International Courses",
+    titInstrus: "Instructors",
+    titContacto: "Want to contact us?",
+    btnEnviar: "Send message",
+    phNombre: "Your name",
+    phEmail: "Your email",
+    phMsg: "Your message",
+    correoInfo: "Or email us at <b>campusmacha@gmail.com</b>",
+    gracias: "Thank you for your message. We'll get back to you soon.",
+    certificado: "Download PDF Certificate",
+    certTit: "Certificate of Completion",
+    certOtorg: "Awarded to:",
+    certPor: "For completing the course:",
+    certCM: "Campus Macha",
+    certFelicit: "Congratulations!",
+    titReseñas: "Student reviews",
+    titMuro: "Community photo wall",
+    foot1: "Campus Macha © 2025 | International online cooking courses",
+    foot2: "Site developed with love, flavor, and a lot of patience 😅"
+  }
+};
+
+let lang = "es";
+function setLang(l) {
+  // primariamente actualizamos la variable y el atributo HTML
+  lang = l;
+  document.documentElement.lang = lang;
+
+  // Menú
+  document.getElementById("m-inicio").innerText      = txts[lang].inicio;
+  document.getElementById("m-cursos").innerText      = txts[lang].cursos;
+  document.getElementById("m-instructores").innerText= txts[lang].instructores;
+  document.getElementById("m-promo").innerText       = txts[lang].promo;
+  document.getElementById("m-reseñas").innerText     = txts[lang].reseñas;
+  document.getElementById("m-muro").innerText        = txts[lang].muro;
+  document.getElementById("m-contacto").innerText    = txts[lang].contacto;
+
+  // Hero
+  document.getElementById("tit-hero").innerHTML      = txts[lang].titHero;
+  document.getElementById("txt-hero").innerHTML      = txts[lang].txtHero;
+
+  // Promo
+  document.getElementById("tit-promo").innerHTML     = txts[lang].titPromo;
+  document.getElementById("txt-promo").innerHTML     = txts[lang].txtPromo;
+
+  // Cursos e instructores
+  document.getElementById("tit-cursos").innerText    = txts[lang].titCursos;
+  document.getElementById("tit-instrus").innerText   = txts[lang].titInstrus;
+
+  // Muro y reseñas
+  document.getElementById("tit-muro").innerText      = txts[lang].titMuro;
+  document.getElementById("tit-reseñas").innerText   = txts[lang].titReseñas;
+
+  // Contacto
+  document.getElementById("tit-contacto").innerText  = txts[lang].titContacto;
+  document.getElementById("btn-enviar").innerText    = txts[lang].btnEnviar;
+  document.getElementById("correo-info").innerHTML   = txts[lang].correoInfo;
+  document.getElementById("input-nombre").placeholder= txts[lang].phNombre;
+  document.getElementById("input-email").placeholder = txts[lang].phEmail;
+  document.getElementById("input-msg").placeholder   = txts[lang].phMsg;
+
+  // Footer
+  document.getElementById("foot-1").innerText        = txts[lang].foot1;
+  document.getElementById("foot-2").innerText        = txts[lang].foot2;
+
+  // Botones de idioma
+  document.getElementById("btnES").classList.toggle("active", lang === "es");
+  document.getElementById("btnEN").classList.toggle("active", lang === "en");
+
+  // Render dinámico
+  renderCursos();
+  renderInstructores();
+  renderReseñas();
+  renderMuro();
+
+  // Carga PayPal
+  loadPayPalScript();
+}
+
+// INSTRUCTORES (randomuser.me, bio bilingüe)
+const instructores = [
+  { nombre: "Pablo Fernández", foto: "https://randomuser.me/api/portraits/men/12.jpg", bio: { es: "Especialista en cocina criolla y asado argentino.", en: "Argentinian grill and criolla food specialist." }},
+  { nombre: "Kenji Sato", foto: "https://randomuser.me/api/portraits/men/40.jpg", bio: { es: "Maestro sushi de Osaka, Japón.", en: "Sushi master from Osaka, Japan." }},
+  { nombre: "Luciana Romano", foto: "https://randomuser.me/api/portraits/women/44.jpg", bio: { es: "Nonna moderna y especialista en pasta italiana.", en: "Modern nonna and Italian pasta expert." }},
+  { nombre: "Somchai Pradchaphet", foto: "https://randomuser.me/api/portraits/men/41.jpg", bio: { es: "Chef tailandés, rey del Pad Thai.", en: "Thai chef, king of Pad Thai." }},
+  { nombre: "Amélie Laurent", foto: "https://randomuser.me/api/portraits/women/47.jpg", bio: { es: "Panadera francesa apasionada por los croissants.", en: "French baker passionate about croissants." }},
+  { nombre: "Sarah Green", foto: "https://randomuser.me/api/portraits/women/53.jpg", bio: { es: "Chef vegana y pastelera plant-based.", en: "Vegan chef and plant-based pastry chef." }},
+  { nombre: "Lucía Varela", foto: "https://randomuser.me/api/portraits/women/52.jpg", bio: { es: "Especialista en panadería saludable y sin gluten.", en: "Healthy and gluten-free bakery specialist." }},
+  { nombre: "Julio Martínez", foto: "https://randomuser.me/api/portraits/men/50.jpg", bio: { es: "Maestro de catering y banquetes mexicanos.", en: "Mexican catering and banquets master." }},
+  { nombre: "Isabel Romero", foto: "https://randomuser.me/api/portraits/women/45.jpg", bio: { es: "Fanática de la paella y la cocina española.", en: "Paella and Spanish food lover." }},
+  { nombre: "Mike Harris", foto: "https://randomuser.me/api/portraits/men/46.jpg", bio: { es: "Coach nutricional y chef keto.", en: "Nutritional coach and keto chef." }}
+];
+
+// 35 CURSOS (nombre y desc bilingüe, imagen local, precio, instructor)
+const cursos = [
+  { nombre: { es: "Empanada Argentina", en: "Argentinian Empanada" }, img: "img/empanada_arg.jpg", desc: { es: "Empanadas, milanesas y asado como un verdadero argentino.", en: "Empanadas, milanesas and barbecue like a true Argentinian." }, precio: 44.99, instructor: 0 },
+  { nombre: { es: "Asado Argentino", en: "Argentinian Grill" }, img: "img/asado_arg.jpg", desc: { es: "Aprendé el asado argentino desde cero.", en: "Learn Argentinian grill from scratch." }, precio: 49.99, instructor: 0 },
+  { nombre: { es: "Milanesa", en: "Breaded Cutlet" }, img: "img/milanesa.jpg", desc: { es: "Todo sobre milanesas crocantes y sabrosas.", en: "Everything about crispy and tasty milanesa." }, precio: 38.99, instructor: 0 },
+  { nombre: { es: "Sushi Japonés", en: "Japanese Sushi" }, img: "img/sushi_japon.jpg", desc: { es: "Sushi y rolls nivel Tokio, con arroz perfecto.", en: "Sushi and rolls, Tokyo level, with perfect rice." }, precio: 69.99, instructor: 1 },
+  { nombre: { es: "Pasta Italiana", en: "Italian Pasta" }, img: "img/pasta_italiana.jpg", desc: { es: "Pasta y salsas italianas clásicas, como en Roma.", en: "Classic Italian pasta and sauces, as in Rome." }, precio: 53.99, instructor: 2 },
+  { nombre: { es: "Paella Española", en: "Spanish Paella" }, img: "img/paella_espanola.jpg", desc: { es: "Paella, tortilla y tapas como en Madrid.", en: "Paella, tortilla and tapas as in Madrid." }, precio: 54.99, instructor: 8 },
+  { nombre: { es: "Panadería Francesa", en: "French Bakery" }, img: "img/panaderia_francesa.jpg", desc: { es: "Croissants, baguettes y panadería pro.", en: "Croissants, baguettes and pro bakery." }, precio: 59.99, instructor: 4 },
+  { nombre: { es: "Cocina Vegana Creativa", en: "Creative Vegan Cooking" }, img: "img/vegana.jpg", desc: { es: "Platos veganos frescos y llenos de sabor.", en: "Fresh and flavorful vegan dishes." }, precio: 42.99, instructor: 5 },
+  { nombre: { es: "Cocina Sin Gluten", en: "Gluten-Free Cooking" }, img: "img/sin_gluten.jpg", desc: { es: "Panes y pastas libres de gluten, bien caseros.", en: "Homemade gluten-free breads and pasta." }, precio: 43.99, instructor: 6 },
+  { nombre: { es: "Tacos Mexicanos", en: "Mexican Tacos" }, img: "img/mexicana.jpg", desc: { es: "Tacos, nachos y cocina mexicana real.", en: "Tacos, nachos and authentic Mexican cuisine." }, precio: 39.99, instructor: 7 },
+  { nombre: { es: "Pad Thai Tailandés", en: "Thai Pad Thai" }, img: "img/padthai_tailandes.jpg", desc: { es: "El clásico tailandés desde tu cocina.", en: "The Thai classic from your own kitchen." }, precio: 62.99, instructor: 3 },
+  { nombre: { es: "BBQ Americana", en: "American BBQ" }, img: "img/bbq_americana.jpg", desc: { es: "Brisket, ribs y barbacoa al estilo USA.", en: "Brisket, ribs and American style barbecue." }, precio: 67.99, instructor: 9 },
+  { nombre: { es: "Torta Decorada", en: "Decorated Cake" }, img: "img/torta_decorada.jpg", desc: { es: "Técnicas de pastelería, decoración y más.", en: "Pastry techniques, decoration and more." }, precio: 49.99, instructor: 4 },
+  { nombre: { es: "Tapas Españolas", en: "Spanish Tapas" }, img: "img/tapas.jpg", desc: { es: "Aprendé los mejores bocados de España.", en: "Learn Spain's best appetizers." }, precio: 41.99, instructor: 8 },
+  { nombre: { es: "Postres de Autor", en: "Signature Desserts" }, img: "img/postres_autor.jpg", desc: { es: "Chocolate, mousse y postres nivel top.", en: "Chocolate, mousse and top-level desserts." }, precio: 56.99, instructor: 4 },
+  { nombre: { es: "Pan Casero", en: "Homemade Bread" }, img: "img/pan_casero.jpg", desc: { es: "Pan francés, integral y de campo.", en: "French, whole grain and rustic breads." }, precio: 36.99, instructor: 4 },
+  { nombre: { es: "Cocina Mediterránea", en: "Mediterranean Cuisine" }, img: "img/mediterranea.jpg", desc: { es: "Pescados, ensaladas y aceite de oliva.", en: "Fish, salads and olive oil." }, precio: 44.99, instructor: 2 },
+  { nombre: { es: "Cocina India", en: "Indian Cuisine" }, img: "img/india.jpg", desc: { es: "Masala, curry, naan y delicias hindúes.", en: "Masala, curry, naan and Indian delicacies." }, precio: 47.99, instructor: 3 },
+  { nombre: { es: "Cocina Marroquí", en: "Moroccan Cuisine" }, img: "img/marroqui.jpg", desc: { es: "Cuscús, tajines y especias exóticas.", en: "Couscous, tagines and exotic spices." }, precio: 38.99, instructor: 3 },
+  { nombre: { es: "Cocina China", en: "Chinese Cuisine" }, img: "img/china.jpg", desc: { es: "Fideos, wok, dim sum y cocina china real.", en: "Noodles, wok, dim sum and real Chinese cooking." }, precio: 51.99, instructor: 1 },
+  { nombre: { es: "Cocina Brasileña", en: "Brazilian Cuisine" }, img: "img/brasilena.jpg", desc: { es: "Feijoada, moqueca y sabores de Brasil.", en: "Feijoada, moqueca and Brazilian flavors." }, precio: 41.99, instructor: 0 },
+  { nombre: { es: "Cocina Coreana", en: "Korean Cuisine" }, img: "img/coreana.jpg", desc: { es: "Kimchi, bibimbap y street food de Seúl.", en: "Kimchi, bibimbap and Seoul street food." }, precio: 47.99, instructor: 1 },
+  { nombre: { es: "Cocina Árabe", en: "Arabian Cuisine" }, img: "img/arabe.jpg", desc: { es: "Shawarma, hummus, falafel y más.", en: "Shawarma, hummus, falafel and more." }, precio: 42.99, instructor: 3 },
+  { nombre: { es: "Cocina Peruana", en: "Peruvian Cuisine" }, img: "img/peruana.jpg", desc: { es: "Ceviche, causa limeña y cocina nikkei.", en: "Ceviche, causa limeña and Nikkei fusion." }, precio: 53.99, instructor: 9 },
+  { nombre: { es: "Cocina Griega", en: "Greek Cuisine" }, img: "img/griega.jpg", desc: { es: "Moussaka, tzatziki, ensalada griega y más.", en: "Moussaka, tzatziki, Greek salad and more." }, precio: 46.99, instructor: 2 },
+  { nombre: { es: "Hamburguesa Gourmet", en: "Gourmet Burger" }, img: "img/hamburguesa.jpg", desc: { es: "Burgers caseras y salsas creativas.", en: "Homemade burgers and creative sauces." }, precio: 43.99, instructor: 9 },
+  { nombre: { es: "Detox & Healthy", en: "Detox & Healthy" }, img: "img/detox.jpg", desc: { es: "Comidas sanas y recetas fit para todos los días.", en: "Healthy meals and fit recipes for every day." }, precio: 33.99, instructor: 5 },
+  { nombre: { es: "Sopas y Cremas", en: "Soups & Creams" }, img: "img/sopa.jpg", desc: { es: "Recetas de sopas del mundo, fáciles y sabrosas.", en: "World soup recipes, easy and tasty." }, precio: 32.99, instructor: 4 },
+  { nombre: { es: "Recetas de Navidad", en: "Christmas Recipes" }, img: "img/navidad.jpg", desc: { es: "Pan dulce, budines y platos festivos.", en: "Panettone, puddings and festive dishes." }, precio: 36.99, instructor: 4 },
+  { nombre: { es: "Pescados y Mariscos", en: "Fish & Seafood" }, img: "img/mariscos.jpg", desc: { es: "Cocina del mar, ceviche y platos frescos.", en: "Seafood cooking, ceviche and fresh dishes." }, precio: 54.99, instructor: 8 },
+  { nombre: { es: "Fast Food Saludable", en: "Healthy Fast Food" }, img: "img/fastfood_saludable.jpg", desc: { es: "Hamburguesas, wraps y comida rápida fit.", en: "Healthy burgers, wraps and fast food." }, precio: 38.99, instructor: 5 },
+  { nombre: { es: "Panadería Sin Gluten", en: "Gluten-Free Bakery" }, img: "img/pan_sin_gluten.jpg", desc: { es: "Pan, bizcochos y focaccia aptos celíacos.", en: "Gluten-free bread, cakes and focaccia." }, precio: 43.99, instructor: 6 },
+  { nombre: { es: "Vegan Gourmet", en: "Vegan Gourmet" }, img: "img/vegan_gourmet.jpg", desc: { es: "Cocina vegana alta gama, moderna y sabrosa.", en: "High-end, modern, tasty vegan cuisine." }, precio: 51.99, instructor: 5 },
+  { nombre: { es: "Cocina para Eventos", en: "Cooking for Events" }, img: "img/eventos.jpg", desc: { es: "Buffet, finger food y menúes de fiesta.", en: "Buffet, finger food and party menus." }, precio: 66.99, instructor: 7 },
+  { nombre: { es: "Pintxos", en: "Pintxos" }, img: "img/pintxos.jpg", desc: { es: "Pinchos, bocaditos y aperitivos vascos.", en: "Basque-style snacks and appetizers." }, precio: 39.99, instructor: 8 }
+];
+
+// RESEÑAS MULTILINGÜES
+const reseñas = [
+  { alumno: {es: "Marta", en: "Marta"}, texto: {es: "¡Me cambió la vida el curso de Sushi! Ahora hago rolls en cada reunión.", en: "The Sushi course changed my life! Now I make rolls at every party."}, estrellas: "★★★★★"},
+  { alumno: {es: "Carlos", en: "Carlos"}, texto: {es: "La pasta italiana es otro nivel. Aprendí más que en años de YouTube.", en: "Italian pasta is next level. I learned more than in years of YouTube."}, estrellas: "★★★★★"}
+];
+
+// MURO DE FOTOS
+const fotosMuro = [
+  "img/muro1.jpg",
+  "img/muro2.jpg",
+  "img/muro3.jpg"
+];
+
+// RENDERIZADO (igual que el anterior...)
+function renderCursos() {
+  const div = document.getElementById('cursos-lista');
+  div.innerHTML = "";
+  cursos.forEach((c, i) => {
+    const inst = instructores[c.instructor];
+    div.innerHTML += `
+      <div class="curso">
+        <img src="${c.img}" alt="${c.nombre[lang]}">
+        <h3>${c.nombre[lang]}</h3>
+        <p>${c.desc[lang]}</p>
+        <div class="precio">€${c.precio.toFixed(2)}</div>
+        <div style="font-size:.93em;margin-bottom:7px;color:#555"><b>${inst.nombre}:</b> ${inst.bio[lang]}</div>
+        <div class="paypal" id="paypal-${i}"></div>
+        <button class="cert-btn" onclick="descargarCertificado('${c.nombre[lang]}')">${txts[lang].certificado}</button>
+      </div>
+    `;
+  });
+  // PayPal por curso
+  cursos.forEach((c, i) => {
+    if (window.paypal) {
+      paypal.Buttons({
+        style: {height: 40},
+        createOrder: (data, actions) => actions.order.create({ purchase_units: [{ amount: { value: c.precio.toString() } }] }),
+        onApprove: (data, actions) => actions.order.capture().then(details => {
+          alert(lang==="es"
+            ? `¡Gracias ${details.payer.name.given_name}! Compra de ${c.nombre.es} completada.`
+            : `Thank you ${details.payer.name.given_name}! Purchase of ${c.nombre.en} completed.`);
+        })
+      }).render(`#paypal-${i}`);
+    }
+  });
+}
+
+function renderInstructores() {
+  const div = document.getElementById("instructores-lista");
+  div.innerHTML = "";
+  instructores.forEach(inst => {
+    div.innerHTML += `
+      <div class="instructor-card">
+        <img src="${inst.foto}" alt="${inst.nombre}">
+        <div class="name">${inst.nombre}</div>
+        <div class="desc">${inst.bio[lang]}</div>
+      </div>
+    `;
+  });
+}
+
+function renderReseñas() {
+  const div = document.getElementById("reseñas-lista");
+  div.innerHTML = "";
+  reseñas.forEach(r => {
+    div.innerHTML += `
+      <div class="reseña-card">
+        <div class="alumno">${r.alumno[lang]}</div>
+        <div class="texto">${r.texto[lang]}</div>
+      </div>
+    `;
+  });
+}
+
+function renderMuro() {
+  const div = document.getElementById("muro");
+  div.innerHTML = "";
+  fotosMuro.forEach(f =>
+    div.innerHTML += `<img src="${f}" alt="Foto alumno Campus Macha">`
+  );
+}
+
+// PAYPAL Y CERTIFICADO
+function loadPayPalScript() {
+  const sdk = document.getElementById("paypal-sdk");
+  if (sdk) sdk.remove();
+  const script = document.createElement('script');
+  script.id = "paypal-sdk";
+  script.src = "https://www.paypal.com/sdk/js?client-id=AX2JWzN40Kjz7fzkM1rH23cEZ_ykwz6GYZSpYT-MoPVUydZIY7mBZfmTcvAKHPAGFRRQOYlgRhPJcpQx&currency=EUR&locale=" + (lang === "es" ? "es_ES" : "en_US");
+  script.onload = function() {
+    if (window.paypal && document.getElementById("paypal-promo")) {
+      document.getElementById("paypal-promo").innerHTML = "";
+      paypal.Buttons({
+        style: {height: 40},
+        createOrder: (data, actions) => actions.order.create({ purchase_units: [{ amount: { value: "100" } }] }),
+        onApprove: (data, actions) => actions.order.capture().then(details => {
+          alert(lang==="es"
+            ? "¡Promo 3 cursos comprada! Te contactamos para elegir tus cursos."
+            : "Promo 3 courses purchased! We'll contact you to choose your courses.");
+        })
+      }).render("#paypal-promo");
+    }
+    renderCursos();
+  };
+  document.body.appendChild(script);
+}
+
+// CERTIFICADO PDF
+function descargarCertificado(curso) {
+  const nombre = prompt(lang === "en" ? "Your full name for the certificate:" : "Tu nombre completo para el certificado:");
+  const email = prompt(lang === "en" ? "Your email address:" : "Tu correo electrónico:");
+  if (!nombre || !email) return alert(lang==="en" ? "Missing data." : "Faltan datos.");
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.setFontSize(22);
+  doc.text(txts[lang].certTit, 20, 30);
+  doc.setFontSize(14);
+  doc.text(`${txts[lang].certOtorg} ${nombre}`, 20, 50);
+  doc.text(`${txts[lang].certPor} ${curso}`, 20, 60);
+  doc.text(`${txts[lang].certCM} – ${new Date().toLocaleDateString()}`, 20, 75);
+  doc.text(txts[lang].certFelicit, 20, 90);
+  doc.save(`certificado-${curso.replace(/ /g,'_')}.pdf`);
+  alert(lang==="en" ? "Certificate ready to download!" : "¡Certificado listo para descargar!");
+}
+window.descargarCertificado = descargarCertificado;
+
+// INICIALIZACIÓN
+setLang("es");
+
+</script>
+</body>
+</html>
